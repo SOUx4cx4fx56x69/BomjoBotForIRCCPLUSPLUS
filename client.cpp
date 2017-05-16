@@ -12,7 +12,6 @@
  #include <netinet/in.h>
  #include <netdb.h>
 #endif
-#include "bot.hpp"
 #include "util.hpp"
 int 
 InitClient(const char*host,int portno)

@@ -1,34 +1,11 @@
-#include "irc.hpp"
 #include "bot.hpp"
+#include "irc.hpp"
 #include <unistd.h>
 #include<stdio.h>
 #include<stdlib.h>
 #include"util.hpp"
 
 #define DEFAULT_SLEEP 1000000 // 1000000 / 1000 = 1000 microseconds
-
-size_t _strlen(const char*str)
-{
-unsigned long counter=0;
-while(*str++)counter++;
-return counter;
-}
-
-char * _copy_string(const char*str)
-{
-size_t sizeString = _strlen(str);
-char * string = (char*)malloc( sizeof(char) * sizeString ); 
-for(size_t i = sizeString;i--;)
- string[i]=str[i];
-
-string[sizeString]='\0';
-return string;
-}
-
-void Bot::PingPong(int socket)
-{
- 
-}
 
 constchr Bot::GetName(void)
 {
@@ -79,10 +56,11 @@ void Bot::SetRecconectMax(unsigned short recconect_max)
 Bot::recconect_max=recconect_max;
 }
 
-/*
- void SetUsername(char*username);
- void SetRealName(char*realname);
-*/
+void Bot::SetDefaultChannel(const char * channel)
+{
+Bot::defaultChannel=_copy_string(channel);
+}
+
 void Bot::SetUsername(constchr username)
 {
 Bot::UserName=_copy_string(username);
@@ -95,8 +73,9 @@ Bot::RealName=_copy_string(realname);
 
 void Bot::connect(void)
 {
-IrcProtocol irc;
-while(!irc.connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName)) Bot::Recconect();
+while(!IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName)) 
+ while( !Bot::Recconect(host,port) ) 
+  usleep(DEFAULT_SLEEP);
 }
 
 bool Bot::Recconect(const char*host,int port)
@@ -111,7 +90,32 @@ if(Bot::self_socket==0)
  return false;
  }
 applog(INFO,"Succefully connecting.");
+IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName);
+IrcProtocol::JoinToChannel(Bot::self_socket,defaultChannel);
 return true;
+}
+
+void Bot::StartRead(void)
+{
+char * buffer = (char*)malloc(sizeof(char)*SIZEBUFFER);
+while(1)
+{
+  if(! readFrom(Bot::self_socket,buffer) ) 
+  {
+  applog(ERROR,"Not can read from server");
+  free(buffer);
+  Bot::Recconect();
+  }
+  printf("%s\n",buffer);
+}
+free(buffer);
+}
+
+bool Bot::JoinToChannel(char*channel)
+{
+ if(!IrcProtocol::JoinToChannel(Bot::self_socket , channel))
+  while( !Bot::Recconect(host,port) ) 
+   usleep(DEFAULT_SLEEP);
 }
 
 Bot::Bot(constchr name,constchr UserName,constchr RealName,constchr host,int port,unsigned short recconect_max)
@@ -120,6 +124,7 @@ Bot::self_socket=InitClient(host,port);
 if(Bot::recconect_max == 0) Bot::recconect_max=MAX_RECCONECT;
 Bot::SetHost(host);
 Bot::SetPort(port);
+Bot::SetName(name);
 Bot::SetName(name);
 Bot::SetUsername(UserName);
 Bot::SetRealName(RealName);

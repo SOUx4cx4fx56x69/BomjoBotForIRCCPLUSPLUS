@@ -45,3 +45,45 @@ break;
 }
 puts("");
 }
+
+long FindWhere(const char*buffer,const char*string)
+{
+printf("%s\n",buffer);
+unsigned long count=0;
+while(*buffer)
+ {
+   if(*buffer == *string)
+   {
+    while(*buffer == *string && *string)
+    {
+     *buffer++;
+     *string++;
+    }
+   
+    if(!*string) return count;
+   }
+  count++;
+ *buffer++;
+ }
+
+if(!*buffer) return -1;
+}
+
+size_t _strlen(const char*str)
+{
+unsigned long counter=0;
+while(*str++)counter++;
+return counter;
+}
+
+char * _copy_string(const char*str)
+{
+size_t sizeString = _strlen(str);
+char * string = (char*)malloc( sizeof(char) * sizeString ); 
+for(size_t i = sizeString;i--;)
+ string[i]=str[i];
+
+string[sizeString]='\0';
+return string;
+}
+
