@@ -4,9 +4,13 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include"util.hpp"
-
-#define DEFAULT_SLEEP 1000000 // 1000000 / 1000 = 1000 microseconds
-
+#define IS_CONNECT()\
+  if( !is_connect(Bot::self_socket) )\
+  {\
+  applog(ERROR,"Not can read from socket");\
+  Bot::Recconect();\
+  }
+#define DEFAULT_SLEEP 10000000 // 1000000 / 1000 = 1000 microseconds
 constchr Bot::GetName(void)
 {
 return Bot::name;
@@ -29,10 +33,17 @@ return Bot::recconect_max;
 
 bool Bot::Recconect(void)
 {
-if(Bot::port == 0 || Bot::host == 0) return false;
+applog(DEBUG,"Recconect call.");
 for(unsigned short i = Bot::recconect_max; i>0 && Bot::self_socket==0; i--)
+{
  Bot::self_socket=InitClient(Bot::host,Bot::port);
+ close(Bot::self_socket);
+ usleep(DEFAULT_SLEEP);
+}
 if(Bot::self_socket==0) return false;
+applog(INFO,"Succefully connecting.");
+IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName);
+IrcProtocol::JoinToChannel(Bot::self_socket,defaultChannel);
 return true;
 }
 
@@ -74,15 +85,21 @@ Bot::RealName=_copy_string(realname);
 void Bot::connect(void)
 {
 while(!IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName)) 
- while( !Bot::Recconect(host,port) ) 
-  usleep(DEFAULT_SLEEP);
+ while( !Bot::Recconect() );
 }
 
 bool Bot::Recconect(const char*host,int port)
 {
+applog(DEBUG,"Recconect.");
 
-for(unsigned short i = Bot::recconect_max; i>0 && Bot::self_socket==0; i--)
+
+
+for(unsigned short i = Bot::recconect_max; i>0 && Bot::self_socket==0 ; i--)
+{
+ close(Bot::self_socket);
  Bot::self_socket=InitClient(host,port);
+usleep(DEFAULT_SLEEP);
+}
 
 if(Bot::self_socket==0) 
  {
@@ -99,28 +116,26 @@ void Bot::StartRead(void)
 {
 char * buffer = (char*)malloc(sizeof(char)*SIZEBUFFER);
 while(1)
-{
-  if(! readFrom(Bot::self_socket,buffer) ) 
   {
-  applog(ERROR,"Not can read from server");
-//  free(buffer); oops
-  Bot::Recconect();
-  }
+  readFrom(Bot::self_socket,buffer);
+  applog(DEBUG,"Read.");
+  if(*buffer == 0) Bot::Recconect();
+  else
   printf("%s\n",buffer);
-}
+  }
 free(buffer);
 }
 
 bool Bot::JoinToChannel(char*channel)
 {
  if(!IrcProtocol::JoinToChannel(Bot::self_socket , channel))
-  while( !Bot::Recconect(host,port) ) 
-   usleep(DEFAULT_SLEEP);
+  while( !Bot::Recconect() );
 }
 
 Bot::Bot(constchr name,constchr UserName,constchr RealName,constchr host,int port,unsigned short recconect_max)
 {
 Bot::self_socket=InitClient(host,port);
+
 if(Bot::recconect_max == 0) Bot::recconect_max=MAX_RECCONECT;
 Bot::SetHost(host);
 Bot::SetPort(port);
@@ -128,5 +143,5 @@ Bot::SetName(name);
 Bot::SetName(name);
 Bot::SetUsername(UserName);
 Bot::SetRealName(RealName);
-while( !Bot::Recconect(host,port) ) usleep(DEFAULT_SLEEP);
+while( !Bot::Recconect() );
 }

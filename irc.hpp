@@ -20,9 +20,12 @@ return false;\
 #define IRC_HPP
 class IrcProtocol
 {
+private:
+ char * NameHost;
 protected:
  void PingPong(int socket,const char*buffer);
 public:
+ void setNameHost(const char * channel);
  bool JoinToChannel(int socket,const char * channel);
  //virtual void JoinToChannel(int,char*);
  IrcProtocol(void);

@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
+#include <stdio.h>
 #ifdef WIN32
    #include <winsock.h>
    #include <winsock2.h>
@@ -16,6 +17,7 @@
 int 
 InitClient(const char*host,int portno)
 {
+    int tmp;
     #ifdef WIN32
      WSADATA wsaData;
      DWORD dwError;
@@ -48,8 +50,16 @@ InitClient(const char*host,int portno)
         applog(ERROR,"ERROR connecting");
 	return 0;
 	}
+   if(setsockopt(sockfd, SOL_SOCKET, SO_KEEPALIVE, &tmp, sizeof(tmp)) == -1) 
+   {
+    applog(ERROR,"Not can set setsockopt");
+    return 0;
+   }
     return sockfd;
 }
+
+
+
 bool
 writeTo(int socket,char*msg)
 {
@@ -72,5 +82,4 @@ stopClient(int * socket)
 {
 close(*socket);
 }
-
 
