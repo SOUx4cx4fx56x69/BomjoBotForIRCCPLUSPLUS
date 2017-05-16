@@ -36,8 +36,9 @@ bool Bot::Recconect(void)
 applog(DEBUG,"Recconect call.");
 for(unsigned short i = Bot::recconect_max; i>0 && Bot::self_socket==0; i--)
 {
- Bot::self_socket=InitClient(Bot::host,Bot::port);
  close(Bot::self_socket);
+ applog(DEBUG,"Recconecting.");
+ Bot::self_socket=InitClient(Bot::host,Bot::port);
  usleep(DEFAULT_SLEEP);
 }
 if(Bot::self_socket==0) return false;
@@ -96,9 +97,10 @@ applog(DEBUG,"Recconect.");
 
 for(unsigned short i = Bot::recconect_max; i>0 && Bot::self_socket==0 ; i--)
 {
+ applog(DEBUG,"Recconecting.");
  close(Bot::self_socket);
  Bot::self_socket=InitClient(host,port);
-usleep(DEFAULT_SLEEP);
+ usleep(DEFAULT_SLEEP);
 }
 
 if(Bot::self_socket==0) 
@@ -140,8 +142,7 @@ bool Bot::JoinToChannel(char*channel)
 Bot::Bot(constchr name,constchr UserName,constchr RealName,constchr host,int port,unsigned short recconect_max)
 {
 Bot::self_socket=InitClient(host,port);
-
-if(Bot::recconect_max == 0) Bot::recconect_max=MAX_RECCONECT;
+Bot::recconect_max == 0 ? Bot::recconect_max=MAX_RECCONECT : recconect_max ;
 Bot::SetHost(host);
 Bot::SetPort(port);
 Bot::SetName(name);
