@@ -11,6 +11,7 @@
   applog(ERROR,"Not can read from socket");\
   Bot::Recconect();\
   }
+pthread_mutex_t Bot_Mutex;
 #define DEFAULT_SLEEP 15 // 1000000 / 1000 = 1000 microseconds
 constchr Bot::GetName(void)
 {
@@ -36,6 +37,7 @@ bool Bot::Recconect(void)
 {
 applog(DEBUG,"Recconect call.");
 if(Bot::self_socket != 0) return true;
+pthread_mutex_lock(&Bot_Mutex);
 for(unsigned short i = Bot::recconect_max;i--;)
 {
  close(Bot::self_socket);
@@ -49,6 +51,7 @@ for(unsigned short i = Bot::recconect_max;i--;)
  if(Bot::self_socket!=0) break;
  sleep(DEFAULT_SLEEP);
 }
+pthread_mutex_unlock(&Bot_Mutex);
 if(Bot::self_socket == 0) return false;
 return true;
 }
@@ -96,8 +99,10 @@ while(!IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealNa
 
 bool Bot::Recconect(const char*host,int port)
 {
+
 applog(DEBUG,"Recconect call.");
 if(Bot::self_socket != 0) return true;
+pthread_mutex_lock(&Bot_Mutex);
 for(unsigned short i = Bot::recconect_max;i--;)
 {
  close(Bot::self_socket);
@@ -111,6 +116,7 @@ for(unsigned short i = Bot::recconect_max;i--;)
  if(Bot::self_socket!=0) break;
  sleep(DEFAULT_SLEEP);
 }
+pthread_mutex_unlock(&Bot_Mutex);
 if(Bot::self_socket == 0) return false;
 return true;
 }
@@ -127,6 +133,7 @@ void Bot::Read(void)
 char * buffer = (char*)malloc(sizeof(char)*SIZEBUFFER);
 while(1)
   {
+pthread_mutex_lock(&Bot_Mutex);
   readFrom(Bot::self_socket,buffer);
   applog(DEBUG,"Read.");
   if(*buffer == 0)
@@ -139,7 +146,7 @@ while(1)
   printf("%s\n",buffer);
   }
 free(buffer);
-
+pthread_mutex_unlock(&Bot_Mutex);
 }
 
 bool Bot::JoinToChannel(char*channel)
@@ -159,4 +166,5 @@ Bot::SetName(name);
 Bot::SetUsername(UserName);
 Bot::SetRealName(RealName);
 while( !Bot::Recconect() );
+pthread_mutex_init(&Bot_Mutex,NULL);
 }

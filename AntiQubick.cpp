@@ -2,11 +2,13 @@
 #include "irc.hpp"
 #include <iostream>
 //#include <pthread.h>
+
 #include <thread>
 #define ERROR(msg){\
  std::cout << msg << "\n"; \
  return 0;\
 }
+
 int main(int argCount,char**arguments)
 {
 if(argCount < 7)
