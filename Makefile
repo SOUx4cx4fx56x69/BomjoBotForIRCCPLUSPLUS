@@ -1,2 +1,2 @@
 all:
-	g++ client.cpp util.cpp bot.cpp AntiQubick.cpp irc.cpp
+	g++ client.cpp util.cpp bot.cpp AntiQubick.cpp irc.cpp -lpthread

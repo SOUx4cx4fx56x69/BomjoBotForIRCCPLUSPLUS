@@ -1,5 +1,6 @@
 #include"util.hpp"
 #include "irc.hpp"
+#include <thread>
 #pragma once
 #ifndef BOT_HPP
 #define BOT_HPP
@@ -14,11 +15,13 @@ private:
  char * UserName; 
  char * RealName;
  char * defaultChannel;
+ 
 public:
  Bot(constchr name,constchr UserName,constchr RealName,constchr host,int port,unsigned short recconect_max=MAX_RECCONECT);
  void connect(void);
  bool JoinToChannel(char*channel);
- void StartRead(void);
+ std::thread StartRead(void);
+ void Read(void);
 protected:
  bool Recconect(void);
  bool Recconect(const char * host, int port);

@@ -14,7 +14,7 @@ if(Ping == -1)
 size_t sizeString = _strlen(buffer);
 char * nameServer = (char*)malloc(sizeof(char)*sizeString);
 size_t i;
-for(i = 0;i!=sizeString && *buffer !=' ';i++)
+for(i = 0;i!=sizeString && *buffer !=' ' && *buffer;i++)
    nameServer[i] = *buffer++;
 nameServer[i++]='\0';
 IrcProtocol::NameHost = _copy_string(nameServer);
@@ -32,7 +32,7 @@ if(*buffer == ':')
   char * ping = (char*)malloc(sizeof(char)*sizeString);
   char * nameServer = (char*)malloc(sizeof(char)*sizeString);
   size_t i;
-  for(i = 0;i!=sizeString && *buffer !='\n';i++)
+  for(i = 0;i!=sizeString && *buffer !='\n' && *buffer;i++)
    ping[i] = *buffer++;
   ping[i++]='\0';
   *buffer++;

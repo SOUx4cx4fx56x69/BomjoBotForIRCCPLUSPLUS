@@ -4,6 +4,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include"util.hpp"
+#include <thread>
 #define IS_CONNECT()\
   if( !is_connect(Bot::self_socket) )\
   {\
@@ -114,8 +115,15 @@ if(Bot::self_socket == 0) return false;
 return true;
 }
 
-void Bot::StartRead(void)
+std::thread Bot::StartRead(void)
 {
+std::thread Read_Thread(&Bot::Read, this);
+return Read_Thread;
+}
+
+void Bot::Read(void)
+{
+
 char * buffer = (char*)malloc(sizeof(char)*SIZEBUFFER);
 while(1)
   {
@@ -131,6 +139,7 @@ while(1)
   printf("%s\n",buffer);
   }
 free(buffer);
+
 }
 
 bool Bot::JoinToChannel(char*channel)
