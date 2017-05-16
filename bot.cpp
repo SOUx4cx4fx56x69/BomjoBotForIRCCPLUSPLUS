@@ -34,17 +34,22 @@ return Bot::recconect_max;
 bool Bot::Recconect(void)
 {
 applog(DEBUG,"Recconect call.");
-for(unsigned short i = Bot::recconect_max; i>0 && Bot::self_socket==0; i--)
+if(Bot::self_socket != 0) return true;
+for(unsigned short i = Bot::recconect_max;i--;)
 {
  close(Bot::self_socket);
  applog(DEBUG,"Recconecting.");
  Bot::self_socket=InitClient(Bot::host,Bot::port);
  usleep(DEFAULT_SLEEP);
+ if(Bot::self_socket==0) return false;
+ applog(DEBUG,"Succefully connecting.");
+ IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName);
+
+ IrcProtocol::JoinToChannel(Bot::self_socket,defaultChannel);
+
+ if(Bot::self_socket!=0) break;
 }
-if(Bot::self_socket==0) return false;
-applog(INFO,"Succefully connecting.");
-IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName);
-IrcProtocol::JoinToChannel(Bot::self_socket,defaultChannel);
+if(Bot::self_socket == 0) return false;
 return true;
 }
 
@@ -91,26 +96,23 @@ while(!IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealNa
 
 bool Bot::Recconect(const char*host,int port)
 {
-applog(DEBUG,"Recconect.");
-
-
-
-for(unsigned short i = Bot::recconect_max; i>0 && Bot::self_socket==0 ; i--)
+applog(DEBUG,"Recconect call.");
+if(Bot::self_socket != 0) return true;
+for(unsigned short i = Bot::recconect_max;i--;)
 {
- applog(DEBUG,"Recconecting.");
  close(Bot::self_socket);
+ applog(DEBUG,"Recconecting.");
  Bot::self_socket=InitClient(host,port);
  usleep(DEFAULT_SLEEP);
-}
+ if(Bot::self_socket==0) return false;
+ applog(DEBUG,"Succefully connecting.");
+ IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName);
 
-if(Bot::self_socket==0) 
- {
- applog(ERROR,"Not can connect to server %s with port %d, sleep %d",host,port,Bot::recconect_max);
- return false;
- }
-applog(INFO,"Succefully connecting.");
-IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName);
-IrcProtocol::JoinToChannel(Bot::self_socket,defaultChannel);
+ IrcProtocol::JoinToChannel(Bot::self_socket,defaultChannel);
+
+ if(Bot::self_socket!=0) break;
+}
+if(Bot::self_socket == 0) return false;
 return true;
 }
 
