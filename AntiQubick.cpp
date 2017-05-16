@@ -10,7 +10,7 @@ int main(int argCount,char**arguments)
 {
 if(argCount < 7)
   ERROR("./programm host port nick UserName RealName channel");
-Bot bot(arguments[4],arguments[5],arguments[3],arguments[1],atoi(arguments[2]));
+Bot bot(arguments[3],arguments[4],arguments[5],arguments[1],atoi(arguments[2]));
 pthread_t BotHead;
 bot.connect();
 bot.JoinToChannel(arguments[6]);
