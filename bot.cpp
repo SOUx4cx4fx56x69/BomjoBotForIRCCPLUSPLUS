@@ -10,7 +10,7 @@
   applog(ERROR,"Not can read from socket");\
   Bot::Recconect();\
   }
-#define DEFAULT_SLEEP 10000000 // 1000000 / 1000 = 1000 microseconds
+#define DEFAULT_SLEEP 15 // 1000000 / 1000 = 1000 microseconds
 constchr Bot::GetName(void)
 {
 return Bot::name;
@@ -40,14 +40,13 @@ for(unsigned short i = Bot::recconect_max;i--;)
  close(Bot::self_socket);
  applog(DEBUG,"Recconecting.");
  Bot::self_socket=InitClient(Bot::host,Bot::port);
- usleep(DEFAULT_SLEEP);
- if(Bot::self_socket==0) return false;
- applog(DEBUG,"Succefully connecting.");
- IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName);
 
+ Bot::connect();
+ Bot::JoinToChannel(Bot::defaultChannel);
  IrcProtocol::JoinToChannel(Bot::self_socket,defaultChannel);
 
  if(Bot::self_socket!=0) break;
+ sleep(DEFAULT_SLEEP);
 }
 if(Bot::self_socket == 0) return false;
 return true;
@@ -103,14 +102,13 @@ for(unsigned short i = Bot::recconect_max;i--;)
  close(Bot::self_socket);
  applog(DEBUG,"Recconecting.");
  Bot::self_socket=InitClient(host,port);
- usleep(DEFAULT_SLEEP);
- if(Bot::self_socket==0) return false;
- applog(DEBUG,"Succefully connecting.");
- IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName);
 
+ Bot::connect();
+ Bot::JoinToChannel(Bot::defaultChannel);
  IrcProtocol::JoinToChannel(Bot::self_socket,defaultChannel);
 
  if(Bot::self_socket!=0) break;
+ sleep(DEFAULT_SLEEP);
 }
 if(Bot::self_socket == 0) return false;
 return true;

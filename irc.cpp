@@ -9,7 +9,18 @@ IrcProtocol::IrcProtocol(){};
 void IrcProtocol::PingPong(int socket,const char*buffer)
 {
 long Ping = FindWhere(buffer,"PING");
-if(Ping != -1) 
+if(Ping == -1)
+{
+size_t sizeString = _strlen(buffer);
+char * nameServer = (char*)malloc(sizeof(char)*sizeString);
+size_t i;
+for(i = 0;i!=sizeString && *buffer !=' ';i++)
+   nameServer[i] = *buffer++;
+nameServer[i++]='\0';
+IrcProtocol::NameHost = _copy_string(nameServer);
+free(nameServer);
+}
+else
 {
 buffer+=Ping;
 while(*buffer && *buffer != ':')
@@ -27,6 +38,9 @@ if(*buffer == ':')
   *buffer++;
   for(i = 0;i!=sizeString && *buffer !=' ';i++)
    nameServer[i] = *buffer++;
+  nameServer[i++]='\0';
+  IrcProtocol::NameHost = _copy_string(nameServer);
+  free(nameServer);
   i=0;
   char tmp[SIZEBUFFER];  
   sprintf(tmp,"PONG %s",ping);
@@ -45,6 +59,7 @@ IrcProtocol::NameHost=_copy_string(name);
 
 bool IrcProtocol::connect(int socket,constchr name,constchr UserName,constchr RealName)
 {
+applog(DEBUG,"IrcProtcocol::connect");
 char * buffer = (char*)malloc(sizeof(char)*SIZEBUFFER);
 sprintf(buffer,"NICK %s",name);
 WRITETOSOCKET(socket,buffer);
