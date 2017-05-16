@@ -19,7 +19,7 @@ char * _copy_string(const char*str)
 char * string = (char*)malloc( sizeof(char) * _strlen(str) ); 
 while(*str)
   *string++=*str++;
-
+return string;
 
 }
 
