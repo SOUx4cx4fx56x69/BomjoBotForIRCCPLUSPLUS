@@ -7,20 +7,23 @@
 
 #define DEFAULT_SLEEP 1000000 // 1000000 / 1000 = 1000 microseconds
 
-unsigned long _strlen(const char*str)
+size_t _strlen(const char*str)
 {
-unsigned long counter;
+unsigned long counter=0;
 while(*str++)counter++;
 return counter;
 }
 
 char * _copy_string(const char*str)
 {
-char * string = (char*)malloc( sizeof(char) * _strlen(str) ); 
-while(*str)
-  *string++=*str++;
+size_t sizeString = _strlen(str);
+char * string = (char*)malloc( sizeof(char) * sizeString ); 
+for(size_t i = sizeString;i--;)
+{
+string[i]=str[i];
+}
+string[sizeString]='\0';
 return string;
-
 }
 
 void Bot::PingPong(int socket)
