@@ -1,4 +1,5 @@
 #define SIZEBUFFER 1024
+#define MAX_RECCONECT 5
 #pragma once
 typedef const char* constchr ;
 class Bot
@@ -13,11 +14,11 @@ private:
  char * UserName; 
  char * RealName;
 public:
- Bot(constchr name,constchr UserName,constchr RealName,constchr host,int port,unsigned short recconect_max=5);
+ Bot(constchr name,constchr UserName,constchr RealName,constchr host,int port,unsigned short recconect_max=MAX_RECCONECT);
  void connect(void);
 protected:
  bool Recconect(void);
- bool Recconect(const char * host, unsigned int port);
+ bool Recconect(const char * host, int port);
  void PingPong(int socket);
  constchr GetHost(void);
  constchr GetName(void);

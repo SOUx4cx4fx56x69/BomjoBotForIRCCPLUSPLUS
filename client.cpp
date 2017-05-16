@@ -56,6 +56,7 @@ writeTo(int socket,char*msg)
 {
 if(send(socket,msg,strlen(msg),MSG_NOSIGNAL) == -1) return false;
 if(send(socket,"\n",1,MSG_NOSIGNAL) == -1) return false;
+return true;
 }
 bool readFrom(int socket,char*buffer)
 {
@@ -65,6 +66,7 @@ if((recv(socket, buffer, SIZEBUFFER-1, 0)) <=0 ) return false;
 #else
 if(read(socket,buffer,SIZEBUFFER-1) == -1) return false;
 #endif
+return true;
 }
 void 
 stopClient(int * socket)
