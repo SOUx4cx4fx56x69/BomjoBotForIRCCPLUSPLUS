@@ -119,7 +119,12 @@ while(1)
   {
   readFrom(Bot::self_socket,buffer);
   applog(DEBUG,"Read.");
-  if(*buffer == 0) Bot::Recconect();
+  if(*buffer == 0)
+ {
+  close(Bot::self_socket);
+  Bot::self_socket=0;
+  Bot::Recconect();
+ }
   else
   printf("%s\n",buffer);
   }
