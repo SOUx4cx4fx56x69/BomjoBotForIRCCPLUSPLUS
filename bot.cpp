@@ -103,7 +103,7 @@ while(1)
   if(! readFrom(Bot::self_socket,buffer) ) 
   {
   applog(ERROR,"Not can read from server");
-  free(buffer);
+//  free(buffer); oops
   Bot::Recconect();
   }
   printf("%s\n",buffer);
