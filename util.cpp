@@ -10,6 +10,9 @@ if(i) debug=true;
 }
 void applog(short _type,const char*frmt,...)
 {
+if(_type == DEBUG && !debug);//shitcodeonelove
+else
+{
 time_t tim;
 time(&tim);
 struct tm* time_info;
@@ -41,7 +44,6 @@ case ERROR:
  vfprintf (stderr, frmt, ap);
 break;
 case DEBUG:
-if(!debug) break;
  sprintf(buffer,"%sDEBUG: ",time_tmp);
  fprintf(stdout,"%s",buffer);
  vfprintf (stdout, frmt, ap);
@@ -49,6 +51,8 @@ break;
 
 }
 puts("");
+}
+
 }
 
 long FindWhere(const char*buffer,const char*string)
