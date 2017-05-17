@@ -145,6 +145,7 @@ void Bot::PingPong(int second)
 
 std::thread Bot::StartPingPongThread(int second)
 {
+   applog(DEBUG,"std::thread Bot::StartPingPongThread(%d)",second);
  std::thread Ping_Pong_Thread(&Bot::PingPong, this,second);
  return Ping_Pong_Thread;
 }
