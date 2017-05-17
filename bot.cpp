@@ -146,9 +146,11 @@ void Bot::PingPong(int second)
 {
  while(1)
  {
+  pthread_mutex_lock(&Bot_Mutex);
   applog(DEBUG,"void Bot::PingPong(%d)",second);
   sleep(second);
   writeTo(Bot::self_socket,(char*)"PONG");
+  pthread_mutex_unlock(&Bot_Mutex);
  }
 
 }
