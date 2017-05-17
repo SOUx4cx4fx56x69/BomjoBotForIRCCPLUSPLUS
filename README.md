@@ -1,5 +1,5 @@
 # BomjoBotForIRCCPLUSPLUS
 
 # What here?
-here be better version https://github.com/codingPrimate/BomjoBotForIRC on C++, probably.
+here be better (in future) version https://github.com/codingPrimate/BomjoBotForIRC on C++, probably.
 
