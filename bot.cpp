@@ -123,29 +123,29 @@ return true;
 
 std::thread Bot::StartRead(void)
 {
+applog(DEBUG,"std::thread Bot::StartRead");
 std::thread Read_Thread(&Bot::Read, this);
 return Read_Thread;
 }
 
 void Bot::PingPong(int second)
 {
-
-while(1)
-{
-sleep(second);
-writeTo(Bot::self_socket,(char*)"PONG");
-}
+ while(1)
+ {
+  sleep(second);
+  writeTo(Bot::self_socket,(char*)"PONG");
+ }
 
 }
 
 std::thread Bot::StartPingPongThread(int second)
 {
-std::thread Ping_Pong_Thread(&Bot::PingPong, this,second);
-return Ping_Pong_Thread;
+ std::thread Ping_Pong_Thread(&Bot::PingPong, this,second);
+ return Ping_Pong_Thread;
 }
 void Bot::Read(void)
 {
-
+applog(DEBUG,"Start thread read.");
 char * buffer = (char*)malloc(sizeof(char)*SIZEBUFFER);
 while(1)
 {
@@ -160,9 +160,9 @@ pthread_mutex_lock(&Bot_Mutex);
   }
   else
   printf("%s\n",buffer);
+pthread_mutex_unlock(&Bot_Mutex);
 }
 free(buffer);
-pthread_mutex_unlock(&Bot_Mutex);
 }
 
 bool Bot::JoinToChannel(char*channel)
