@@ -3,8 +3,9 @@
 class BotFunctions : private Bot
 {
 private:
+ int self_socket;
  bool MessageUnderstanding(char*msg);
 public:
- BotFunctions(void);
+ BotFunctions(int socket);
  virtual void ReadMessage(char*msg);
 };

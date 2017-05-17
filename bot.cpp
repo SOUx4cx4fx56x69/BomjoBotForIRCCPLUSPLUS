@@ -6,12 +6,7 @@
 #include"util.hpp"
 #include "BotFunctions.hpp"
 #include <thread>
-#define IS_CONNECT()\
-  if( !is_connect(Bot::self_socket) )\
-  {\
-  applog(ERROR,"Not can read from socket");\
-  Bot::Recconect();\
-  }
+
 #define DEFAULT_SLEEP 15 // 1000000 / 1000 = 1000 microseconds
 #ifndef BOT_MUTEX
 #define BOT_MUTEX
@@ -97,7 +92,7 @@ Bot::RealName=_copy_string(realname);
 
 void Bot::connect(void)
 {
-while(!IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName)) 
+while(!IrcProtocol::connect(Bot::self_socket,Bot::name,Bot::UserName,Bot::RealName))
  while( !Bot::Recconect() );
 }
 
@@ -131,6 +126,21 @@ applog(DEBUG,"std::thread Bot::StartRead");
 std::thread Read_Thread(&Bot::Read, this);
 return Read_Thread;
 }
+void Bot::WriteMessage(int socket,char*msg)
+{
+pthread_mutex_lock(&Bot_Mutex);
+applog(DEBUG,"Write to server: %s",msg);
+writeTo(socket,msg);
+pthread_mutex_unlock(&Bot_Mutex);
+}
+
+void Bot::WriteMessage(char*msg)
+{
+pthread_mutex_lock(&Bot_Mutex);
+applog(DEBUG,"Write to server: %s",msg);
+writeTo(this->self_socket,msg);
+pthread_mutex_unlock(&Bot_Mutex);
+}
 
 void Bot::PingPong(int second)
 {
@@ -153,13 +163,14 @@ void Bot::Read(void)
 {
 applog(DEBUG,"Start thread read.");
 char * buffer = (char*)malloc(sizeof(char)*SIZEBUFFER);
-BotFunctions Functions;
+BotFunctions Functions(Bot::self_socket);
 
 while(1)
 {
 pthread_mutex_lock(&Bot_Mutex);
   readFrom(Bot::self_socket,buffer);
   applog(DEBUG,"Read.");
+  //writeTo(Bot::self_socket,(char*)"PRIVMSG #ru test");
   if(*buffer == 0)
   {
   close(Bot::self_socket);
@@ -167,7 +178,11 @@ pthread_mutex_lock(&Bot_Mutex);
   Bot::Recconect();
   }
   else
+  {
+   pthread_mutex_unlock(&Bot_Mutex);
    Functions.ReadMessage(buffer);
+   pthread_mutex_lock(&Bot_Mutex);
+  }
 pthread_mutex_unlock(&Bot_Mutex);
 }
 free(buffer);

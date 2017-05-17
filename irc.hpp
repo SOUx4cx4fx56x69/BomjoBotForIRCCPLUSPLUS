@@ -3,7 +3,6 @@
 #define READFROMSOCKET(socket,buffer)\
 if(! readFrom(socket,buffer) ) \
 {\
-applog(ERROR,"Not can read from server");\
 free(buffer);\
 return false;\
 }
@@ -11,7 +10,6 @@ return false;\
 #define WRITETOSOCKET(socket,buffer)\
 if(! writeTo(socket,buffer) ) \
 {\
-applog(ERROR,"Not can write to server");\
 free(buffer);\
 return false;\
 }

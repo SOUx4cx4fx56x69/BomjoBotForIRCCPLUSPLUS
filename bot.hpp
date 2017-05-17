@@ -7,14 +7,15 @@
 class Bot : public IrcProtocol
 {
 private:
- unsigned short recconect_max; 
+ unsigned short recconect_max;
  char * host;
  unsigned int port;
  char* name;
- char * UserName; 
+ char * UserName;
  char * RealName;
  char * defaultChannel;
  void PingPong(int second);
+ int self_socket;
 public:
  std::thread StartPingPongThread(int second);
  Bot(constchr name,constchr UserName,constchr RealName,constchr host,int port,unsigned short recconect_max=MAX_RECCONECT);
@@ -24,7 +25,8 @@ public:
  std::thread StartRead(void);
  void Read(void);
 protected:
- int self_socket;
+ void WriteMessage(char*msg);
+ void WriteMessage(int socket,char*msg);
  bool Recconect(void);
  bool Recconect(const char * host, int port);
  constchr GetHost(void);
@@ -41,4 +43,3 @@ protected:
 };
 
 #endif
-
