@@ -7,6 +7,6 @@ void applog(short _type,const char*frmt,...);
 long FindWhere(const char*buffer,const char*string);
 size_t _strlen(const char*str);
 char * _copy_string(const char*str);
-
+void debug_on(int i);
 #pragma once
 typedef const char* constchr ;

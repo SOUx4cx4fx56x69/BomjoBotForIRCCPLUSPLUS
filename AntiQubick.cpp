@@ -12,8 +12,9 @@
 int main(int argCount,char**arguments)
 {
 if(argCount < 8)
-  ERROR("./programm host port nick UserName RealName channel PingPongSleep");
+  ERROR("./programm host port nick UserName RealName channel PingPongSleep Debug");
 Bot bot(arguments[3],arguments[4],arguments[5],arguments[1],atoi(arguments[2]));
+debug_on(atoi(arguments[8]));
 std::thread Read_Thread,PingPongThread;
 
 bot.connect();

@@ -3,7 +3,11 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+static bool debug = false;
+void debug_on(int i)
+{
+if(i) debug=true;
+}
 void applog(short _type,const char*frmt,...)
 {
 time_t tim;
@@ -37,6 +41,7 @@ case ERROR:
  vfprintf (stderr, frmt, ap);
 break;
 case DEBUG:
+if(!debug) break;
  sprintf(buffer,"%sDEBUG: ",time_tmp);
  fprintf(stdout,"%s",buffer);
  vfprintf (stdout, frmt, ap);
