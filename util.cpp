@@ -48,7 +48,7 @@ puts("");
 
 long FindWhere(const char*buffer,const char*string)
 {
-printf("%s\n",buffer);
+//printf("%s\n",buffer);
 unsigned long count=0;
 while(*buffer)
  {
