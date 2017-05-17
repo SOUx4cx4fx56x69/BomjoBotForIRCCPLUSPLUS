@@ -4,6 +4,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include"util.hpp"
+#include "BotFunctions.hpp"
 #include <thread>
 #define IS_CONNECT()\
   if( !is_connect(Bot::self_socket) )\
@@ -11,8 +12,11 @@
   applog(ERROR,"Not can read from socket");\
   Bot::Recconect();\
   }
-pthread_mutex_t Bot_Mutex;
 #define DEFAULT_SLEEP 15 // 1000000 / 1000 = 1000 microseconds
+#ifndef BOT_MUTEX
+#define BOT_MUTEX
+pthread_mutex_t Bot_Mutex;
+#endif
 constchr Bot::GetName(void)
 {
 return Bot::name;
@@ -132,6 +136,7 @@ void Bot::PingPong(int second)
 {
  while(1)
  {
+  applog(DEBUG,"void Bot::PingPong(%d)",second);
   sleep(second);
   writeTo(Bot::self_socket,(char*)"PONG");
  }
@@ -147,6 +152,8 @@ void Bot::Read(void)
 {
 applog(DEBUG,"Start thread read.");
 char * buffer = (char*)malloc(sizeof(char)*SIZEBUFFER);
+BotFunctions Functions;
+
 while(1)
 {
 pthread_mutex_lock(&Bot_Mutex);
@@ -159,7 +166,7 @@ pthread_mutex_lock(&Bot_Mutex);
   Bot::Recconect();
   }
   else
-  printf("%s\n",buffer);
+   Functions.ReadMessage(buffer);
 pthread_mutex_unlock(&Bot_Mutex);
 }
 free(buffer);
@@ -170,7 +177,7 @@ bool Bot::JoinToChannel(char*channel)
  if(!IrcProtocol::JoinToChannel(Bot::self_socket , channel))
   while( !Bot::Recconect() );
 }
-
+Bot::Bot(void){}
 Bot::Bot(constchr name,constchr UserName,constchr RealName,constchr host,int port,unsigned short recconect_max)
 {
 Bot::self_socket=InitClient(host,port);
