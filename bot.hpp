@@ -15,8 +15,9 @@ private:
  char * UserName; 
  char * RealName;
  char * defaultChannel;
- 
+ void PingPong(int second);
 public:
+ std::thread StartPingPongThread(int second);
  Bot(constchr name,constchr UserName,constchr RealName,constchr host,int port,unsigned short recconect_max=MAX_RECCONECT);
  void connect(void);
  bool JoinToChannel(char*channel);

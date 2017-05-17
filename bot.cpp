@@ -127,24 +127,40 @@ std::thread Read_Thread(&Bot::Read, this);
 return Read_Thread;
 }
 
+void Bot::PingPong(int second)
+{
+
+while(1)
+{
+sleep(second);
+writeTo(Bot::self_socket,(char*)"PONG");
+}
+
+}
+
+std::thread Bot::StartPingPongThread(int second)
+{
+std::thread Ping_Pong_Thread(&Bot::PingPong, this,second);
+return Ping_Pong_Thread;
+}
 void Bot::Read(void)
 {
 
 char * buffer = (char*)malloc(sizeof(char)*SIZEBUFFER);
 while(1)
-  {
+{
 pthread_mutex_lock(&Bot_Mutex);
   readFrom(Bot::self_socket,buffer);
   applog(DEBUG,"Read.");
   if(*buffer == 0)
- {
+  {
   close(Bot::self_socket);
   Bot::self_socket=0;
   Bot::Recconect();
- }
+  }
   else
   printf("%s\n",buffer);
-  }
+}
 free(buffer);
 pthread_mutex_unlock(&Bot_Mutex);
 }
