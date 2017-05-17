@@ -44,10 +44,8 @@ char ** Arguments = (char**)malloc(sizeof(char*) * paramsComand);
 unsigned int t=0;
 
 for(unsigned int i = paramsComand;i--;)
-{
-  printf("Allocate memory %d %d\n",i,SizeString);
   Arguments[i]=(char*)malloc(sizeof(char) * SizeString);
-}
+
 char * pch = strtok (command," ");
 while (pch != NULL)
 {
