@@ -7,5 +7,6 @@ private:
  bool MessageUnderstanding(char*msg);
 public:
  BotFunctions(int socket);
+ bool BotCommand(char*nick,char*realname,char*adress,char*TypeMessage,char*channel,char*command);
  virtual void ReadMessage(char*msg);
 };

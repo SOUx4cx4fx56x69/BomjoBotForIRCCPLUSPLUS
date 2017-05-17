@@ -22,8 +22,9 @@ bot.JoinToChannel(arguments[6]);
 
 Read_Thread = bot.StartRead();
 PingPongThread = bot.StartPingPongThread(atoi(arguments[7]));
-Read_Thread.join(); 
+Read_Thread.join();
 PingPongThread.join();
+delete &bot;
 //while(1);
 //void (test)(void)=&bot.connect;
 //pthread_create(&BotHead,NULL,bot.connect,NULL);

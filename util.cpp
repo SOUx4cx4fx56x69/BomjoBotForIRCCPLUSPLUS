@@ -54,7 +54,27 @@ puts("");
 }
 
 }
-
+unsigned long CountChar(char*buffer,char ch)
+{
+   long count=0;
+   while(*buffer)
+   {
+      if(*buffer==ch)count++;
+      *buffer++;
+   }
+return count == -1 ? -1 : count+1;
+}
+long paramsComand(char*buffer,char ch)
+{
+   long count;
+   while(*buffer && *buffer != ch )
+   {
+      *buffer++;
+      count++;
+   }
+   if(*buffer == ch) return count;
+   return -1;
+}
 long FindWhere(const char*buffer,const char*string)
 {
 //printf("%s\n",buffer);
@@ -68,7 +88,7 @@ while(*buffer)
      *buffer++;
      *string++;
     }
-   
+
     if(!*string) return count;
    }
   count++;
@@ -80,7 +100,7 @@ if(!*buffer) return -1;
 
 size_t _strlen(const char*str)
 {
-unsigned long counter=0;
+int counter=0;
 while(*str++)counter++;
 return counter;
 }
@@ -88,11 +108,49 @@ return counter;
 char * _copy_string(const char*str)
 {
 size_t sizeString = _strlen(str);
-char * string = (char*)malloc( sizeof(char) * sizeString ); 
+char * string = (char*)malloc( sizeof(char) * sizeString );
 for(size_t i = sizeString;i--;)
  string[i]=str[i];
 
 string[sizeString]='\0';
 return string;
 }
+/*
+char * _strtok(char*buffer,const char *what)
+{
+while(*buffer == 0) *buffer++;
+//printf("%s\n",buffer);
+size_t whatSize = _strlen(what);
+char * string = (char*)malloc(sizeof(char)*whatSize);
+unsigned int i = 0;
+while(*buffer)
+{
+for(int i = 0; i< whatSize;i++)
+{
+if(*buffer == *what)
+{
+*buffer=0;
+return string;
+}
+}
+string[i++]=*buffer++;
+*(buffer-1)=0;
+}
+if(!*buffer)
+{
+// free((void*)&buffer[0]);
+ return 0;
+}
+return string;
+}
+*/
+char * _strdup(char*buffer)
+{
+unsigned int i = 0;
+size_t bufferSize = _strlen(buffer);
+char * string = (char*)malloc(sizeof(char)*bufferSize);
+while(*buffer)
+ string[i++]=*buffer++;
 
+return string;
+}

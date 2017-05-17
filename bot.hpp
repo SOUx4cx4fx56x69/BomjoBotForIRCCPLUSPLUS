@@ -20,6 +20,7 @@ public:
  std::thread StartPingPongThread(int second);
  Bot(constchr name,constchr UserName,constchr RealName,constchr host,int port,unsigned short recconect_max=MAX_RECCONECT);
  Bot(void);
+ ~Bot(void);
  void connect(void);
  bool JoinToChannel(char*channel);
  std::thread StartRead(void);

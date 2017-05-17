@@ -12,6 +12,7 @@
 #define BOT_MUTEX
 pthread_mutex_t Bot_Mutex;
 #endif
+bool destruct=false;
 constchr Bot::GetName(void)
 {
 return Bot::name;
@@ -146,11 +147,10 @@ void Bot::PingPong(int second)
 {
  while(1)
  {
-  pthread_mutex_lock(&Bot_Mutex);
   applog(DEBUG,"void Bot::PingPong(%d)",second);
   sleep(second);
   writeTo(Bot::self_socket,(char*)"PONG");
-  pthread_mutex_unlock(&Bot_Mutex);
+  if(destruct) break;
  }
 
 }
@@ -186,6 +186,7 @@ pthread_mutex_lock(&Bot_Mutex);
    pthread_mutex_lock(&Bot_Mutex);
   }
 pthread_mutex_unlock(&Bot_Mutex);
+if(destruct) break;
 }
 free(buffer);
 }
@@ -196,6 +197,16 @@ bool Bot::JoinToChannel(char*channel)
   while( !Bot::Recconect() );
 }
 Bot::Bot(void){}
+Bot::~Bot(void)
+{
+   destruct=true;
+   close(Bot::self_socket);
+   free(name);
+   free(UserName);
+   free(RealName);
+   free(defaultChannel);
+   Bot::self_socket=0;
+}
 Bot::Bot(constchr name,constchr UserName,constchr RealName,constchr host,int port,unsigned short recconect_max)
 {
 Bot::self_socket=InitClient(host,port);

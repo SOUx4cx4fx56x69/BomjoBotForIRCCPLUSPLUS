@@ -5,15 +5,19 @@
 #include <string.h>
 #ifndef GET_PART
 #define GET_PART(msg,ch,tmp,array){\
-  while(*msg != ch && *msg)\
-   array[tmp++] = *msg++;\
+   while(*msg != ch && *msg){\
+    if(*msg == '\n')*msg++;\
+    else array[tmp++] = *msg++;\
+   }\
   array[tmp++]='\0';\
   tmp=0;\
   *msg++;\
 }
 #define GET_PART_WITHOUTCLEAR(msg,ch,tmp,array){\
-  while(*msg != ch && *msg)\
-   array[tmp++] = *msg++;\
+  while(*msg != ch && *msg){\
+   if(*msg == '\n')*msg++;\
+   else array[tmp++] = *msg++;\
+  }\
   array[tmp++]='\0';\
   *msg++;\
 }
@@ -23,6 +27,41 @@ BotFunctions::BotFunctions(int socket)
 {
    BotFunctions::self_socket=socket;
 }
+
+bool BotFunctions::BotCommand(char*nick,char*realname,char*adress,char*TypeMessage,char*channel,char*command)
+{
+*command++;
+if(!*nick || !*realname || !*adress || !*command || !*TypeMessage || !*channel) return false;
+size_t SizeString=_strlen(command);
+if(SizeString == 0) return false;
+
+bool CalledByUser=false;
+if(*channel!='#')CalledByUser=true;
+unsigned long paramsComand = CountChar(command,' ');
+
+
+char ** Arguments = (char**)malloc(sizeof(char*) * paramsComand);
+unsigned int t=0;
+
+for(unsigned int i = paramsComand;i--;)
+{
+  printf("Allocate memory %d %d\n",i,SizeString);
+  Arguments[i]=(char*)malloc(sizeof(char) * SizeString);
+}
+char * pch = strtok (command," ");
+while (pch != NULL)
+{
+ Arguments[t++]=strdup(pch);
+ pch = strtok (NULL, " ");
+}
+for(unsigned int i = t;i--;)
+{
+   printf("%s\n",Arguments[i]);
+}
+for(unsigned int i = paramsComand;i--;)
+ free(Arguments[i]);
+}
+
 bool BotFunctions::MessageUnderstanding(char*msg)
 {//shitcodeonelove
 
@@ -62,13 +101,11 @@ char * channel;
   tmp=0;
   GET_PART(msg,'\n',tmp,Message);
 //
-applog(INFO,"%s!%s@%s Write: (%s) %s %s ",Nick,RealName,Adress,TypeMessage,channel,Message);
-if(FindWhere(Message,"привет")!=-1)
-{
-   char tmp[SIZEBUFFER];
-   sprintf(tmp,"PRIVMSG %s дратути, %s",channel,Nick);
-   Bot::WriteMessage(BotFunctions::self_socket,tmp);
-}
+applog(INFO,"%s!%s@%s Write: (%s) %s %s",Nick,RealName,Adress,TypeMessage,channel,Message);
+//
+if(FindWhere(TypeMessage,"PRIVMSG")!=-1)
+ BotFunctions::BotCommand(Nick,RealName,Adress,TypeMessage,channel,Message);
+//
 free(Nick);
 free(RealName);
 free(Adress);
