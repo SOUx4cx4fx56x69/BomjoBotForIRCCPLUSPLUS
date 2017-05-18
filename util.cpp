@@ -59,6 +59,7 @@ unsigned long CountChar(char*buffer,char ch)
    long count=0;
    while(*buffer)
    {
+	//printf("%c %c \n",*buffer,ch);
       if(*buffer==ch)count++;
       *buffer++;
    }

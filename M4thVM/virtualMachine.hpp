@@ -1,6 +1,7 @@
 #include "../util.hpp"
 #ifndef VIRTUAL_MATH_MACHINE
 #define VIRTUAL_MATH_MACHINE
+#define DEFAULVARSALLOCATE 10
 union value
 {
 long double signedvalue;
@@ -14,7 +15,7 @@ union value val;
 Machine_Vars * before_var;
 }Machine_Vars;
 
-typedef enum 
+typedef enum
 {
 undefined,number,letter,math_letter
 }type;
@@ -23,12 +24,13 @@ class VirtualMachine
 {
 private:
 volatile long double sum;
-Machine_Vars vars;
+Machine_Vars * vars;
 char * last_error;
-const char * numbers = "1234567890"; 
+const char * numbers = "1234567890";
 const char * varsnameletters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const char * math_letters = "+-*/%^";
 const char end_string = '\n';
+const char set_char = '=';
 type type_letters(char ch);
 public:
 VirtualMachine(void);
