@@ -127,7 +127,7 @@ while(*buffer)
 {
 for(int i = 0; i< whatSize;i++)
 {
-if(*buffer == *what)
+if(*buffer == what[i])
 {
 *buffer=0;
 return string;
