@@ -54,28 +54,15 @@ const char * VirtualMachine::AnalyseString(const char * string)
      }
 	  printf("number\n");
      break;
-
      case letter:
-     /*
      while(*string && (VirtualMachine::type_letters(*(string+1)) == letter ))
-     {
-
-     }
-     */
-     while(*string && *string != VirtualMachine::set_char)
      {
         tmp[counter++]=*string++;
      }
-     if(*string != VirtualMachine::set_char)
+     if(*string == this->set_char)
      {
-       //code
-       VirtualMachine::vars->name=_strdup(tmp);
-     }
-     else
-     {
-       tmp[counter++]='$';
-       VirtualMachine::vars->name=_strdup(tmp-1);
-       //code
+      // tmp[counter++]='$';
+      tmp[counter++]=7;
      }
      printf("let %c\n",*string++);
      break;
@@ -88,19 +75,25 @@ const char * VirtualMachine::AnalyseString(const char * string)
      return 0;
      }
      if(*string == '+' && counter < MAXBUFFER-1){
-      tmp[counter++]='P';//Plus
+      //tmp[counter++]='P';//Plus
+      tmp[counter++]=1;
       //tmp[counter++]=' ';
      }else if(*string=='-' && counter < MAXBUFFER-1) {
-      tmp[counter++]='M';//Minus
+      //tmp[counter++]='M';//Minus
+      tmp[counter++]=2;
       //tmp[counter++]=' ';
      }else if(*string=='*' && counter < MAXBUFFER-1){
-      tmp[counter++]='I';//Increase
+      tmp[counter++]=3;
+      //tmp[counter++]='I';//Increase
      }else if(*string=='/' && counter < MAXBUFFER-1){
-      tmp[counter++]='D';//Divide
+      tmp[counter++]=4;
+      //tmp[counter++]='D';//Divide
      }else if(*string=='%' && counter < MAXBUFFER-1){
-      tmp[counter++]='L';//moduLe
+      //tmp[counter++]='L';//moduLe
+      tmp[counter++]=5;
      }else if(*string=='^' && counter < MAXBUFFER-1){
-      tmp[counter++]='O';//pOw
+      tmp[counter++]=6;
+      //tmp[counter++]='O';//pOw
      }
      else return 0;
      sign_before=false;
