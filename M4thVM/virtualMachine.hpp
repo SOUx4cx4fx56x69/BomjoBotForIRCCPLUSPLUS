@@ -35,7 +35,7 @@ type type_letters(char ch);
 public:
 VirtualMachine(void);
 VirtualMachine(const char * string);
-bool ParseString(const char * string);
+const char * ParseString(const char * string);
 long double GetResult(void);
 protected:
 const char * AnalyseString(const char * string);

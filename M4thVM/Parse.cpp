@@ -1,10 +1,5 @@
 #include "virtualMachine.hpp"
 #include <stdio.h>
-bool VirtualMachine::ParseString(const char * string)
-{
-const char * parse;
-if(! (parse = VirtualMachine::AnalyseString(string))) return false;
-printf("%s\n",parse);
 /*
 PLUS 1
 MINUS 2
@@ -14,5 +9,18 @@ MODULE 5
 POW 6
 SET 7
 GET auto
+8 == (*-1)
 */
+const char * VirtualMachine::ParseString(const char * string)
+{
+const char * parse;
+if(! (parse = VirtualMachine::AnalyseString(string))) return 0;
+unsigned long i = 0;
+while(*parse)
+{
+   printf("%c",*parse);
+   *parse++;
+}
+puts("");
+
 }

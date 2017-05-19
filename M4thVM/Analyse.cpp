@@ -24,7 +24,11 @@ const char * VirtualMachine::AnalyseString(const char * string)
  char * tmp = (char*)calloc(sizeof(char),MAXBUFFER);
  unsigned int counter=0;
  bool sign_before=false;
- bool two=false;
+ bool msign=false;
+ if(*string == '-'){
+ tmp[counter++] = 8;
+ *string++;
+ }
  while(*string && *string !=end_string)
  {
    while(*string && *string == ' ')*string++;
@@ -33,7 +37,7 @@ const char * VirtualMachine::AnalyseString(const char * string)
      case number:
      while(*string > 47 && *string < 58 || *string == '.' && *string && counter < MAXBUFFER-1)
      {
-        if(sign_before && *string == '.' && !two)
+        if(sign_before && *string == '.')
         {
         applog(ERROR,"Parse error, much '.'");
         free(tmp);
@@ -41,16 +45,6 @@ const char * VirtualMachine::AnalyseString(const char * string)
         }
         if(*string == '.') sign_before=true;
         tmp[counter++]=*string++;
-     }
-     if(two)
-     {
-      two=false;
-      //
-     }
-     else
-     {
-     two=true;
-     //tmp[counter++]=' ';
      }
 	  printf("number\n");
      break;
@@ -68,6 +62,12 @@ const char * VirtualMachine::AnalyseString(const char * string)
      break;
 
      case math_letter:
+     if(*(string+1) == '-' && !msign)
+     {
+        msign=true;
+        tmp[counter++]=8;
+        *string++;
+     }
      if(VirtualMachine::type_letters(*(string+1)) == math_letter )
      {
      applog(ERROR,"Parse error, after %c not must be yet math_letter %c",*string,*(string+1));
@@ -96,6 +96,7 @@ const char * VirtualMachine::AnalyseString(const char * string)
       //tmp[counter++]='O';//pOw
      }
      else return 0;
+     msign=false;
      sign_before=false;
      *string++;
      printf("math %c\n",*string);
