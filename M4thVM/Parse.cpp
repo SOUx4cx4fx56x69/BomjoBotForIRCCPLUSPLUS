@@ -22,7 +22,8 @@ while(*parse)
    if((int)*parse > 47 && (int)*parse<58)
    {//numbers
     printf("\nNumber : %d\n",(int)*parse-48);
-   }else if( ( (int)*parse >= 65 && (int)*parse <= 90 ) || ( (int)*parse>=97 && (int)*parse <= 122) )
+   }else if( ( (int)*parse >= 65 && (int)*parse <= 90 ) || 
+             ( (int)*parse>=97 && (int)*parse <= 122)) //A-Z OR a-z
    {//vars
 	printf("\nVar: %c\n",*parse);
    }else if( (int)*parse >=1 && (int)*parse <=8)
@@ -32,8 +33,8 @@ while(*parse)
    else
    {
      printf("undefined char -- %d\n",*parse);
-//    applog(ERROR,"Undefined type(VirtualMachine::ParseString). Stop calculating.");
-//    return 0;
+     applog(ERROR,"Undefined type(VirtualMachine::ParseString). Stop calculating.");
+     return 0;
    } 
    printf("%c",*parse);
    *parse++;
