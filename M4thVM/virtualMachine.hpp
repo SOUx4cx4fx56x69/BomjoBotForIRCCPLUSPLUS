@@ -23,7 +23,7 @@ undefined,number,letter,math_letter
 class VirtualMachine
 {
 private:
-volatile long double sum;
+volatile float sum=0;
 Machine_Vars * vars;
 char * last_error;
 const char * numbers = "1234567890";
@@ -37,7 +37,7 @@ public:
 VirtualMachine(void);
 VirtualMachine(const char * string);
 unsigned const char * ParseString(const char * string);
-long double GetResult(void);
+float GetResult(void);
 protected:
 unsigned const char * AnalyseString(const char * string);
 }

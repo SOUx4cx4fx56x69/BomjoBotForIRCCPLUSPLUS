@@ -3,7 +3,7 @@
 #include <stdlib.h>
 VirtualMachine::VirtualMachine(void)
 {
-this->sum=0;
+this->sum=0.0;
 }
 
 VirtualMachine::VirtualMachine(const char * string)
@@ -13,7 +13,7 @@ this->sum=0;
 this->ParseString(string);
 }
 
-long double VirtualMachine::GetResult(void)
+float VirtualMachine::GetResult(void)
 {
 return this->sum;
 }

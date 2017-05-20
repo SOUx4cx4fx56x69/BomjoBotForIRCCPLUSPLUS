@@ -109,6 +109,6 @@ unsigned const char * VirtualMachine::AnalyseString(const char * string)
      break;
    }
  }
- tmp[counter++]=';';
+ tmp[counter++]=this->end_some_math_operation;
  return tmp;
 }
