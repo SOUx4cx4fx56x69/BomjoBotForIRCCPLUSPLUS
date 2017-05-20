@@ -21,7 +21,7 @@ return (type)undefined;
 
 unsigned const char * VirtualMachine::AnalyseString(const char * string)
 {
-unsigned char * tmp = (unsigned char*)calloc(sizeof(char),MAXBUFFER);
+ unsigned char * tmp = (unsigned char*)calloc(sizeof(char),MAXBUFFER);
  unsigned int counter=0;
  bool sign_before=false;
  bool msign=false;

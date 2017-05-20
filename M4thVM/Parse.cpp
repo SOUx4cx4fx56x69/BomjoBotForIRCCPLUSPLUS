@@ -18,6 +18,17 @@ if(! (parse = VirtualMachine::AnalyseString(string))) return 0;
 unsigned long i = 0;
 while(*parse)
 {
+   if((int)*parse > 47 && (int)*parse<58)
+   {//numbers
+  
+   }else if( (int)*parse >= 65 && ( (int)*parse<90 || ((int)*parse >=97 && (int)*parse <= 122) ) )
+   {//vars
+
+   }
+   else if( (int)*parse >=1 && (int)*parse <=8)
+   {//math
+   
+   } 
    printf("%c",*parse);
    *parse++;
 }
