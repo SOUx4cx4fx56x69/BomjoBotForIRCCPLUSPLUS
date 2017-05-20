@@ -18,16 +18,22 @@ if(! (parse = VirtualMachine::AnalyseString(string))) return 0;
 unsigned long i = 0;
 while(*parse)
 {
+   if(*parse == this->end_some_math_operation) break;
    if((int)*parse > 47 && (int)*parse<58)
    {//numbers
-  
-   }else if( (int)*parse >= 65 && ( (int)*parse<90 || ((int)*parse >=97 && (int)*parse <= 122) ) )
+    printf("\nNumber : %d\n",(int)*parse-48);
+   }else if( ( (int)*parse >= 65 && (int)*parse <= 90 ) || ( (int)*parse>=97 && (int)*parse <= 122) )
    {//vars
-
-   }
-   else if( (int)*parse >=1 && (int)*parse <=8)
+	printf("\nVar: %c\n",*parse);
+   }else if( (int)*parse >=1 && (int)*parse <=8)
    {//math
-   
+    printf("\nMath %d\n",(int)*parse);
+   }
+   else
+   {
+     printf("undefined char -- %d\n",*parse);
+//    applog(ERROR,"Undefined type(VirtualMachine::ParseString). Stop calculating.");
+//    return 0;
    } 
    printf("%c",*parse);
    *parse++;

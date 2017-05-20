@@ -30,6 +30,7 @@ const char * numbers = "1234567890";
 const char * varsnameletters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const char * math_letters = "+-*/%^";
 const char end_string = '\n';
+const char end_some_math_operation = ';'; // shit name, i know
 const char set_char = '=';
 type type_letters(char ch);
 public:
