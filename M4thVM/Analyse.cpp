@@ -19,9 +19,9 @@ if(CountChar((char*)VirtualMachine::varsnameletters,ch) > 1 || ch == this->set_c
 return (type)undefined;
 }
 
-const char * VirtualMachine::AnalyseString(const char * string)
+unsigned const char * VirtualMachine::AnalyseString(const char * string)
 {
- char * tmp = (char*)calloc(sizeof(char),MAXBUFFER);
+unsigned char * tmp = (unsigned char*)calloc(sizeof(char),MAXBUFFER);
  unsigned int counter=0;
  bool sign_before=false;
  bool msign=false;

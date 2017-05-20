@@ -11,9 +11,9 @@ SET 7
 GET auto
 8 == (*-1)
 */
-const char * VirtualMachine::ParseString(const char * string)
+unsigned const char * VirtualMachine::ParseString(const char * string)
 {
-const char * parse;
+unsigned const char * parse;
 if(! (parse = VirtualMachine::AnalyseString(string))) return 0;
 unsigned long i = 0;
 while(*parse)
