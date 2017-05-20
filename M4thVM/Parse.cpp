@@ -41,6 +41,11 @@ unsigned const char * VirtualMachine::ParseString(const char * string)
 unsigned const char * parse;
 
 float result = 0.0f;
+/*
+type_operand * operands;
+float * numbers;
+Need to do this in the morning for priority
+*/
 if(! (parse = VirtualMachine::AnalyseString(string))) return 0;
 unsigned long i = 0;
 while(*parse)
