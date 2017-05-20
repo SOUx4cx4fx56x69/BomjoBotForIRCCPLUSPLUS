@@ -201,10 +201,10 @@ Bot::~Bot(void)
 {
    destruct=true;
    close(Bot::self_socket);
-   free(name);
-   free(UserName);
-   free(RealName);
-   free(defaultChannel);
+   free(this->name);
+   free(this->UserName);
+   free(this->RealName);
+   free(this->defaultChannel);
    Bot::self_socket=0;
 }
 Bot::Bot(constchr name,constchr UserName,constchr RealName,constchr host,int port,unsigned short recconect_max)
