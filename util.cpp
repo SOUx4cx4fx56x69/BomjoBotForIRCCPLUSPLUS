@@ -54,9 +54,9 @@ puts("");
 }
 
 }
-unsigned long CountChar(char*buffer,char ch)
+long CountChar(char*buffer,char ch)
 {
-   long count=0;
+   long count=-1;
    while(*buffer)
    {
 	//printf("%c %c \n",*buffer,ch);
