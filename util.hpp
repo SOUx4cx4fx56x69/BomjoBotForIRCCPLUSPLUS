@@ -9,9 +9,11 @@ size_t _strlen(const char*str);
 char * _copy_string(const char*str);
 void debug_on(int i);
 long paramsComand(char*buffer,char ch);
-unsigned long CountChar(char*buffer,char ch);
+long CountChar(char*buffer,char ch);
 void add_string(char*buf,const char*string);
 //char * _strtok(char*buffer,const char *what);
 char * _strdup(char*buffer);
+
 #pragma once
+
 typedef const char* constchr ;

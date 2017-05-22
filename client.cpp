@@ -13,8 +13,23 @@
  #include <netinet/in.h>
  #include <netdb.h>
 #endif
+#include <signal.h>
 #include "util.hpp"
+#include "AntiQubick.hpp"
 #include <errno.h>
+bool closedSocket;
+void _closed_(int)
+{
+closedSocket=true;
+}
+void _open_now_(void)
+{
+closedSocket=false;
+}
+bool _is_connected(void)
+{
+return closedSocket;
+}
 int
 InitClient(const char*host,int portno)
 {
@@ -56,6 +71,7 @@ InitClient(const char*host,int portno)
     applog(ERROR,"Not can set setsockopt");
     return 0;
    }
+    signal(SIGPIPE,_closed_);
     return sockfd;
 }
 

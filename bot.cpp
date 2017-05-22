@@ -4,6 +4,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include"util.hpp"
+#include "AntiQubick.hpp"
 #include "BotFunctions.hpp"
 #include <thread>
 
@@ -53,6 +54,7 @@ for(unsigned short i = Bot::recconect_max;i--;)
 }
 pthread_mutex_unlock(&Bot_Mutex);
 if(Bot::self_socket == 0) return false;
+_open_now_();
 return true;
 }
 
@@ -118,6 +120,7 @@ for(unsigned short i = Bot::recconect_max;i--;)
 }
 pthread_mutex_unlock(&Bot_Mutex);
 if(Bot::self_socket == 0) return false;
+_open_now_();
 return true;
 }
 
@@ -173,7 +176,7 @@ pthread_mutex_lock(&Bot_Mutex);
   readFrom(Bot::self_socket,buffer);
   applog(DEBUG,"Read.");
   //writeTo(Bot::self_socket,(char*)"PRIVMSG #ru test");
-  if(*buffer == 0)
+  if(*buffer == 0 || _is_connected())
   {
   close(Bot::self_socket);
   Bot::self_socket=0;

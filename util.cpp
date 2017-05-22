@@ -1,8 +1,10 @@
+
 #include "util.hpp"
 #include <stdarg.h>
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 static bool debug = false;
 void debug_on(int i)
 {
