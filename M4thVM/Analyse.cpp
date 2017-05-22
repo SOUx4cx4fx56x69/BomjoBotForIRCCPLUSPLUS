@@ -13,9 +13,9 @@ NameVar=Number
 */
 type VirtualMachine::type_letters(const char ch)
 {
-if(CountChar((char*)VirtualMachine::math_letters,ch) > 1) return (type)math_letter;
-if(CountChar((char*)VirtualMachine::numbers,ch) > 1) return (type)number;
-if(CountChar((char*)VirtualMachine::varsnameletters,ch) > 1 || ch == this->set_char  ) return (type)letter;
+if(CountChar((char*)VirtualMachine::math_letters,ch) > 0) return (type)math_letter;
+if(CountChar((char*)VirtualMachine::numbers,ch) > 0) return (type)number;
+if(CountChar((char*)VirtualMachine::varsnameletters,ch) > 0 || ch == this->set_char  ) return (type)letter;
 return (type)undefined;
 }
 
@@ -31,6 +31,7 @@ unsigned const char * VirtualMachine::AnalyseString(const char * string)
  }
  while(*string && *string !=end_string)
  {
+  // printf("%d\n",VirtualMachine::type_letters(*string));
    while(*string && *string == ' ')*string++;
    switch(VirtualMachine::type_letters(*string))
    {
@@ -46,7 +47,7 @@ unsigned const char * VirtualMachine::AnalyseString(const char * string)
         if(*string == '.') sign_before=true;
         tmp[counter++]=*string++;
      }
-	  printf("number\n");
+//	  printf("number\n");
      break;
      case letter:
      while(*string && (VirtualMachine::type_letters(*(string+1)) == letter ))
@@ -58,7 +59,7 @@ unsigned const char * VirtualMachine::AnalyseString(const char * string)
       // tmp[counter++]='$';
       tmp[counter++]=7;
      }
-     printf("let %c\n",*string++);
+ //    printf("let %c\n",*string++);
      break;
 
      case math_letter:
@@ -99,7 +100,7 @@ unsigned const char * VirtualMachine::AnalyseString(const char * string)
      msign=false;
      sign_before=false;
      *string++;
-     printf("math %c\n",*string);
+ //    printf("math %c\n",*string);
      break;
 
      default:

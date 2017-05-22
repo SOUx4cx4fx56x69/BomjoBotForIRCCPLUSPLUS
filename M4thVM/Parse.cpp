@@ -11,12 +11,16 @@ POW 6
 SET 7
 GET auto
 8 == (*-1)
-*/
-#define GET_NUM(result,buf){\
-result+=getNum(parse);\
-while((int)*buf > 47 && (int)*buf<58 || (int)*buf == '.' && *buf)buf++;\
-}
 
+
+*/
+#define MINSIZE 100
+#define ALLOCATE 15
+#define GET_NUM(tmp,buf){\
+tmp=getNum(parse);\
+while((int)*buf > 47 && (int)*buf<58 || (int)*buf == '.' && *buf)buf++;\
+buf--;\
+}
 
 float getNum(const unsigned char * buffer)
 {
@@ -41,49 +45,36 @@ unsigned const char * VirtualMachine::ParseString(const char * string)
 unsigned const char * parse;
 
 float result = 0.0f;
-/*
-type_operand * operands;
-float * numbers;
-Need to do this in the morning for priority
-*/
+float tmp = 0.0f;
+
+short size_operands __attribute__( (aligned(32)) ) = 0; // ~1024
+short size_numbers __attribute__( (aligned(32)) ) = 0; // ~1024
+
+char * operands = (char*)calloc(sizeof(char),MINSIZE);
+float * numbers = (float*)calloc(sizeof(float),MINSIZE);
+
 if(! (parse = VirtualMachine::AnalyseString(string))) return 0;
 unsigned long i = 0;
 while(*parse)
 {
    if(*parse == this->end_some_math_operation) break;
+//printf("%d\n",*parse);
    if((int)*parse > 47 && (int)*parse<58 || (int)*parse == '.')
    {//numbers
-	//GET_NUM(result,parse,0);
-	GET_NUM(result,parse);
-	parse--;
-   }else if( ( (int)*parse >= 65 && (int)*parse <= 90 ) || 
-             ( (int)*parse>=97 && (int)*parse <= 122)) //A-Z OR a-z
-   {//vars
-	printf("\nVar: %c\n",*parse);
+	GET_NUM(tmp,parse);
+	numbers[size_numbers-1]=tmp;
+	size_numbers++;
+	if(size_numbers>=MINSIZE)
+	 numbers = (float*)realloc(numbers,size_numbers+ALLOCATE);
+   }else if( ( (int)*parse >= 65 && (int)*parse <= 90 ) || //A-Z OR a-z
+             ( (int)*parse>=97 && (int)*parse <= 122)){//vars
+	printf("\nVar: %c\n",*parse++);
    }else if( (int)*parse >=1 && (int)*parse <=8)
    {//math
-    switch((int)*parse)//alternative goto one love
-    {
-	case 1:
-        //GET_NUM(result,parse,0);
-	GET_NUM(result,parse);
-	break;
-	case 2:
-	//GET_NUM(result,parse,1);
-	break;
-	case 3:
-	break;
-	case 4:
-	break;
-	case 5:
-	break;
-	case 6:
-	break;
-	case 7:
-	break;
-	case 8:
-	break;
-    }
+ 	operands[size_operands-1]=*parse;
+	size_operands++;
+	if(size_operands>=MINSIZE)
+	 operands = (char*)realloc(operands,size_operands+ALLOCATE);
    }
    else
    {
@@ -94,6 +85,10 @@ while(*parse)
    //printf("%c",*parse);
    *parse++;
 }
+for(short i = size_operands;i--;)
+ printf("\nOPERAND->%c\n",operands[i]);
+for(short i = size_numbers;i--;)
+ printf("\nNUMBER->%f\n",numbers[i]);
 this->sum=result;
 puts("");
 
