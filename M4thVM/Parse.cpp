@@ -47,8 +47,8 @@ unsigned const char * parse;
 float result = 0.0f;
 float tmp = 0.0f;
 
-short size_operands __attribute__( (aligned(32)) ) = 0; // ~1024
-short size_numbers __attribute__( (aligned(32)) ) = 0; // ~1024
+short size_operands __attribute__( (aligned(32)) ) = 1; // ~1024
+short size_numbers __attribute__( (aligned(32)) ) = 1; // ~1024
 
 char * operands = (char*)calloc(sizeof(char),MINSIZE);
 float * numbers = (float*)calloc(sizeof(float),MINSIZE);
@@ -85,10 +85,77 @@ while(*parse)
    //printf("%c",*parse);
    *parse++;
 }
+/*
 for(short i = size_operands;i--;)
- printf("\nOPERAND->%c\n",operands[i]);
-for(short i = size_numbers;i--;)
- printf("\nNUMBER->%f\n",numbers[i]);
+{
+here be priority
+}
+*/
+/*
+PLUS 1
+MINUS 2
+MULTIPL 3
+DIVIDE 4
+MODULE 5
+POW 6
+SET 7
+GET auto
+8 == (*-1)
+
+
+*/
+#warning NOT CORRECTLY almost
+for(short i = 0;i<size_numbers;i++)
+{
+printf("Operands %d\n",operands[i]);
+tmp = numbers[i];
+if(operands[i] == 1)
+{
+ result+=tmp+numbers[i+1];
+ numbers[i+1]=0.0f;
+}else if(operands[i] == 2){
+ result+=tmp-numbers[i+1];
+ numbers[i+1]=0.0f;
+}else if(operands[i] == 3){
+ printf("%f\n",result);
+ result+=tmp*numbers[i+1];
+ printf("%f\n",result);
+ numbers[i+1]=0.0f;
+}else if(operands[i] == 4){
+ if(numbers[i+1]==0 || tmp==0)
+ {
+  applog(ERROR,"not allow divide on zero...");
+  result=0;
+  break;
+ }
+ result+=tmp/numbers[i+1];
+ numbers[i+1]=0.0f;
+}else if(operands[i] == 5){
+ if(numbers[i+1]==0 || tmp==0)
+ {
+  applog(ERROR,"not allow divide on zero...");
+  result=0;
+  break;
+ }
+ result+=((int)tmp % (int)numbers[i+1]);
+ numbers[i+1]=0.0f;
+}
+/*
+else if(operands[i] == 6){
+ result+=tmp-numbers[i+1];
+ numbers[i+1]=0.0f;
+}else if(operands[i] == 7){
+ result+=tmp-numbers[i+1];
+ numbers[i+1]=0.0f;
+}*/
+else if(operands[i] == 8){
+ result*=-1;
+ numbers[i+1]=0.0f;
+}
+
+
+}
+
 this->sum=result;
 puts("");
 
