@@ -23,6 +23,7 @@ undefined,number,letter,math_letter
 class VirtualMachine
 {
 private:
+unsigned int MAX_NUM;
 volatile float sum=0;
 Machine_Vars * vars;
 char * last_error;

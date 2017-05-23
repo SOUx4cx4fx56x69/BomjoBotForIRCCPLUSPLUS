@@ -1,6 +1,8 @@
 #include "virtualMachine.hpp"
 #include <stdio.h>
 #include <stdlib.h>
+
+
 #define MAXBUFFER 1024
 /*
 <Hypnosis> Coco/r учёные делали

@@ -13,7 +13,7 @@ long CountChar(char*buffer,char ch);
 void add_string(char*buf,const char*string);
 //char * _strtok(char*buffer,const char *what);
 char * _strdup(char*buffer);
-
+unsigned int max_flt(void);
 #pragma once
 
 typedef const char* constchr ;

@@ -1,6 +1,9 @@
 #include "virtualMachine.hpp"
 #include <stdio.h>
 #include <math.h>
+#include <float.h>
+//#include <limits.h>
+
 /*
 PLUS 1
 MINUS 2
@@ -17,7 +20,14 @@ GET auto
 #define MINSIZE 100
 #define ALLOCATE 15
 #define GET_NUM(tmp,buf){\
+counter++;\
+if(counter >= this->MAX_NUM)\
+{\
+     applog(ERROR,"Very bit number....(in future version...)");\
+     return 0;\
+}\
 tmp=getNum(parse);\
+counter=0;\
 while((int)*buf > 47 && (int)*buf<58 || (int)*buf == '.' && *buf)buf++;\
 buf--;\
 }
@@ -46,7 +56,7 @@ unsigned const char * parse;
 
 float result = 0.0f;
 float tmp = 0.0f;
-
+unsigned int counter=0;
 short size_operands __attribute__( (aligned(32)) ) = 1; // ~1024
 short size_numbers __attribute__( (aligned(32)) ) = 1; // ~1024
 
@@ -78,19 +88,21 @@ while(*parse)
    }
    else
    {
-     printf("undefined char -- %d\n",*parse);
+    // printf("undefined char -- %d\n",*parse);
      applog(ERROR,"Undefined type(VirtualMachine::ParseString). Stop calculating.");
      return 0;
    } 
    //printf("%c",*parse);
    *parse++;
 }
+
 /*
 for(short i = size_operands;i--;)
 {
 here be priority
 }
 */
+
 /*
 PLUS 1
 MINUS 2
@@ -107,7 +119,10 @@ GET auto
 #warning NOT CORRECTLY almost
 for(short i = 0;i<size_numbers;i++)
 {
-printf("Operands %d\n",operands[i]);
+printf("Operands %d\n Num %f\n",operands[i],numbers[i]);
+if(i+1>size_numbers)
+tmp = numbers[i-1];
+else
 tmp = numbers[i];
 if(operands[i] == 1)
 {
@@ -120,7 +135,6 @@ if(operands[i] == 1)
  printf("%f\n",result);
  result+=tmp*numbers[i+1];
  printf("%f\n",result);
- numbers[i+1]=0.0f;
 }else if(operands[i] == 4){
  if(numbers[i+1]==0 || tmp==0)
  {
@@ -129,7 +143,6 @@ if(operands[i] == 1)
   break;
  }
  result+=tmp/numbers[i+1];
- numbers[i+1]=0.0f;
 }else if(operands[i] == 5){
  if(numbers[i+1]==0 || tmp==0)
  {
@@ -137,8 +150,8 @@ if(operands[i] == 1)
   result=0;
   break;
  }
- result+=((int)tmp % (int)numbers[i+1]);
- numbers[i+1]=0.0f;
+ result+=((long long)tmp % (long long)numbers[i+1]);
+ //numbers[i+1]=0.0f;
 }
 /*
 else if(operands[i] == 6){

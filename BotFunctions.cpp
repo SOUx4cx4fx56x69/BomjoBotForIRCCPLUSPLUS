@@ -37,8 +37,8 @@ if(SizeString == 0) return false;
 
 bool CalledByUser=false;
 if(*channel!='#')CalledByUser=true;
-unsigned long paramsComand = CountChar(command,' ');
-
+long paramsComand = CountChar(command,' ');
+if(paramsComand<=0)paramsComand=1;
 
 char ** Arguments = (char**)malloc(sizeof(char*) * paramsComand);
 unsigned int t=0;
@@ -86,10 +86,11 @@ char * channel;
   GET_PART_WITHOUTCLEAR(msg,' ',tmp,TypeMessage);
   char * Message = (char*)malloc(sizeof(char) *  sizeString-(AdressWhere+tmp));
   tmp=0;
-
+  
   if(ChannelWhere == -1)
   {
    channel = strdup(Nick);
+   while(*msg && *msg !=' ')*msg++;
   }
   else
   {
@@ -97,12 +98,14 @@ char * channel;
      GET_PART(msg,' ',tmp,channel);
   }
   tmp=0;
+  printf("%s\n",msg);
   GET_PART(msg,'\n',tmp,Message);
 //
 applog(INFO,"%s!%s@%s Write: (%s) %s %s",Nick,RealName,Adress,TypeMessage,channel,Message);
 //
 if(FindWhere(TypeMessage,"PRIVMSG")!=-1)
  BotFunctions::BotCommand(Nick,RealName,Adress,TypeMessage,channel,Message);
+printf("Free\n");
 //
 free(Nick);
 free(RealName);

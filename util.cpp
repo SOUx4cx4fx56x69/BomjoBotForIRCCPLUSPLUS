@@ -4,8 +4,14 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <float.h>
 static bool debug = false;
+unsigned int max_flt(void)
+{
+char tmp[256];
+sprintf(tmp,"%f",FLT_MAX);
+return _strlen(tmp);
+}
 void debug_on(int i)
 {
 if(i) debug=true;

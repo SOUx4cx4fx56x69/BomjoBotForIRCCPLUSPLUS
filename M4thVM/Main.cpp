@@ -1,13 +1,16 @@
 #include "virtualMachine.hpp"
 #include <stdio.h>
 #include <stdlib.h>
+
 VirtualMachine::VirtualMachine(void)
 {
+this->MAX_NUM=max_flt();
 this->sum=0.0;
 }
 
 VirtualMachine::VirtualMachine(const char * string)
 {
+this->MAX_NUM=max_flt();
 this->vars=(Machine_Vars*)malloc(sizeof(Machine_Vars)*DEFAULVARSALLOCATE);
 this->sum=0;
 this->ParseString(string);
