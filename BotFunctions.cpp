@@ -4,6 +4,10 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h> 
+#include <unistd.h>
+#include <fcntl.h>
+
 #define STACKTMPSIZE 2056
 #define CHANNELSIZE 33
 #ifndef GET_PART
@@ -137,6 +141,19 @@ for(unsigned int i = 0;i< paramsComand;i++)
 //free(Arguments);
 }
 
+void * BotFunctions::BotParseCommand(const char*nick,const char*realname,const char*adress,const char*TypeMessage,const char*channel, const char*command)
+{
+
+int file = open("commands.com",O_RDONLY);
+if(file == -1) return (void*)-1;
+out:
+asm
+(
+"nop"
+);
+close(file);
+}
+
 bool BotFunctions::MessageUnderstanding(char*msg)
 {//shitcodeonelove
 
@@ -148,7 +165,7 @@ if(RealNameWhere == -1) return false;
 unsigned int AdressWhere = FindWhere(msg,"@");
 if(AdressWhere == -1) return false;
 unsigned int ChannelWhere = FindWhere(msg,"#");
-
+bool TrueChannel = false;
 register volatile int tmp=0;
 char * Nick = (char*)malloc(sizeof(char) *  RealNameWhere);
 char * RealName = (char*)malloc(sizeof(char) *  sizeString-RealNameWhere);
@@ -159,37 +176,45 @@ char * channel;
 //
   GET_PART_WITHOUTCLEAR(msg,' ',tmp,Adress)
   char * TypeMessage = (char*)malloc(sizeof(char) *  sizeString-(AdressWhere+tmp));
+
   tmp=0;
   GET_PART_WITHOUTCLEAR(msg,' ',tmp,TypeMessage);
   char * Message = (char*)malloc(sizeof(char) *  sizeString-(AdressWhere+tmp));
+
   tmp=0;
   
   if(ChannelWhere == -1)
   {
    channel = strdup(Nick);
+   TrueChannel=true;
    while(*msg && *msg !=' ')*msg++;
   }
   else
   {
      channel = (char*)malloc(sizeof(char) *  sizeString-(ChannelWhere));
+//     firstChannel=channel;
      GET_PART(msg,' ',tmp,channel);
   }
   tmp=0;
-  printf("%s\n",msg);
+  //printf("%s\n",msg);
   GET_PART(msg,'\n',tmp,Message);
 //
 applog(INFO,"%s!%s@%s Write: (%s) %s %s",Nick,RealName,Adress,TypeMessage,channel,Message);
 //
 if(FindWhere(TypeMessage,"PRIVMSG")!=-1)
  BotFunctions::BotCommand(Nick,RealName,Adress,TypeMessage,channel,Message);
-printf("Free\n");
-//
+
+//BotFunctions::BotParseCommand(Nick,RealName,Adress,TypeMessage,channel,Message);
+//else if(
+//printf("Free\n");
+// shitcode one love
 free(Nick);
 free(RealName);
 free(Adress);
 free(TypeMessage);
-free(Message);
-free(channel);
+//free(Message);
+//if(TrueChannel)
+// free(channel);
 }
 
 void BotFunctions::ReadMessage(char*msg)
