@@ -52,7 +52,7 @@ if(paramsComand<=0)paramsComand=1;
 char ** Arguments = (char**)malloc(sizeof(char*) * paramsComand);
 unsigned int t=0;
 
-for(unsigned int i = paramsComand;i--;)
+for(unsigned int i = paramsComand+1;i--;)
   Arguments[i]=(char*)malloc(sizeof(char) * SizeString);
 
 char * pch = strtok ((char*)command," ");
@@ -136,9 +136,9 @@ else if(strstr(Arguments[0],"HELP") != 0)
 }
 bzero(tmp_bufffer,STACKTMPSIZE);
 
-for(unsigned int i = 0;i< paramsComand;i++)
+for(unsigned int i = paramsComand+1;i--;)
  free(Arguments[i]);
-//free(Arguments);
+
 }
 
 void * BotFunctions::BotParseCommand(const char*nick,const char*realname,const char*adress,const char*TypeMessage,const char*channel, const char*command)
@@ -165,7 +165,7 @@ if(RealNameWhere == -1) return false;
 unsigned int AdressWhere = FindWhere(msg,"@");
 if(AdressWhere == -1) return false;
 unsigned int ChannelWhere = FindWhere(msg,"#");
-//bool TrueChannel = false;
+bool TrueChannel = false;
 register volatile int tmp=0;
 char * Nick = (char*)malloc(sizeof(char) *  RealNameWhere);
 char * RealName = (char*)malloc(sizeof(char) *  sizeString-RealNameWhere);
@@ -186,7 +186,7 @@ char * channel;
   if(ChannelWhere == -1)
   {
    channel = strdup(Nick);
- //  TrueChannel=true;
+   TrueChannel=true;
    while(*msg && *msg !=' ')*msg++;
   }
   else
@@ -201,20 +201,23 @@ char * channel;
 //
 applog(INFO,"%s!%s@%s Write: (%s) %s %s",Nick,RealName,Adress,TypeMessage,channel,Message);
 //
+
 if(FindWhere(TypeMessage,"PRIVMSG")!=-1)
  BotFunctions::BotCommand(Nick,RealName,Adress,TypeMessage,channel,Message);
 
 //BotFunctions::BotParseCommand(Nick,RealName,Adress,TypeMessage,channel,Message);
-//else if(
+
 //printf("Free\n");
 // shitcode one love
 free(Nick);
 free(RealName);
 free(Adress);
-//free(TypeMessage);
-//free(Message);
-//if(TrueChannel)
-// free(channel);
+/*
+free(TypeMessage);
+free(Message);
+if(TrueChannel)
+ free(channel);
+*/
 }
 
 void BotFunctions::ReadMessage(char*msg)
