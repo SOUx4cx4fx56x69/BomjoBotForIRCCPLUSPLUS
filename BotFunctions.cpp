@@ -1,8 +1,11 @@
 #include "bot.hpp"
 #include "BotFunctions.hpp"
 #include "util.hpp"
+#include <signal.h>
 #include <stdlib.h>
 #include <string.h>
+#define STACKTMPSIZE 2056
+#define CHANNELSIZE 33
 #ifndef GET_PART
 #define GET_PART(msg,ch,tmp,array){\
    while(*msg != ch && *msg){\
@@ -28,7 +31,7 @@ BotFunctions::BotFunctions(int socket)
    BotFunctions::self_socket=socket;
 }
 
-bool BotFunctions::BotCommand(char*nick,char*realname,char*adress,char*TypeMessage,char*channel,char*command)
+bool BotFunctions::BotCommand(const char*nick,const char*realname,const char*adress,const char*TypeMessage,const char*channel, const char*command)
 {
 *command++;
 if(!*nick || !*realname || !*adress || !*command || !*TypeMessage || !*channel) return false;
@@ -37,7 +40,7 @@ if(SizeString == 0) return false;
 
 bool CalledByUser=false;
 if(*channel!='#')CalledByUser=true;
-long paramsComand = CountChar(command,' ');
+long paramsComand = CountChar((char*)command,' ');
 if(paramsComand<=0)paramsComand=1;
 
 char ** Arguments = (char**)malloc(sizeof(char*) * paramsComand);
@@ -46,18 +49,76 @@ unsigned int t=0;
 for(unsigned int i = paramsComand;i--;)
   Arguments[i]=(char*)malloc(sizeof(char) * SizeString);
 
-char * pch = strtok (command," ");
+char * pch = strtok ((char*)command," ");
 while (pch != NULL)
 {
  Arguments[t++]=strdup(pch);
  pch = strtok (NULL, " ");
 }
-for(unsigned int i = t;i--;)
+char tmp_bufffer[STACKTMPSIZE];
+if(strcmp(Arguments[0],"SAYTHIS") == 0)
 {
-   printf("%s\n",Arguments[i]);
+ if(Arguments[1][0] != '#')
+ {
+  applog(DEBUG,"BotFunctions::BotCommand -> dont channel");
+  sprintf(tmp_bufffer,"PRIVMSG %s",channel);
+  for(unsigned int i = 1;i<t;i++)
+  {
+   sprintf(tmp_bufffer,"%s %s",tmp_bufffer,Arguments[i]);
+  }
+  writeTo(this->self_socket,tmp_bufffer);
+  applog(DEBUG,"BotFunctions::BotCommand -> Write to %s",tmp_bufffer);
+ }
+ else
+ { 
+  //shitcode one love
+  applog(DEBUG,"BotFunctions::BotCommand -> exist channel");
+  unsigned int tmp_counter_channel=0;
+  char tmp_channel_name[CHANNELSIZE];
+  while(Arguments[1][tmp_counter_channel])
+  {
+   tmp_channel_name[tmp_counter_channel] = Arguments[1][tmp_counter_channel];
+   tmp_counter_channel++;
+  }
+  tmp_channel_name[tmp_counter_channel]='\0';
+  sprintf(tmp_bufffer,"PRIVMSG %s %s",tmp_channel_name,Arguments[2]);
+  applog(DEBUG,"BotFunctions::BotCommand -> Write to %s",tmp_bufffer);
+  writeTo(this->self_socket,tmp_bufffer);
+ }
+}//if(strcmp(Arguments[0],"SAYTHIS") == 0)
+else if(strcmp(Arguments[0],"LEAVE") == 0)
+{
+  sprintf(tmp_bufffer,"PART %s",Arguments[1]);
+  writeTo(this->self_socket,tmp_bufffer);
 }
-for(unsigned int i = paramsComand;i--;)
+else if(strcmp(Arguments[0],"JOINTO") == 0)
+{
+  sprintf(tmp_bufffer,"JOIN %s",Arguments[1]);
+  writeTo(this->self_socket,tmp_bufffer);
+}
+else if(strcmp(Arguments[0],"QUIT") == 0)
+{
+  sprintf(tmp_bufffer,"QUIT %s",Arguments[1]);
+  writeTo(this->self_socket,tmp_bufffer);
+  raise(9);
+}
+else if(strcmp(Arguments[0],"WRITETOSERVER") == 0)
+{
+  for(unsigned int i = 1;i<t;i++)
+  {
+   sprintf(tmp_bufffer,"%s%s",tmp_bufffer,Arguments[i]);
+  }
+  writeTo(this->self_socket,tmp_bufffer);
+}
+else if(strcmp(Arguments[0],"NICKSET") == 0)
+{
+  sprintf(tmp_bufffer,"NICK %s",Arguments[1]);
+  writeTo(this->self_socket,tmp_bufffer);
+}
+
+for(unsigned int i = 0;i< paramsComand;i++)
  free(Arguments[i]);
+//free(Arguments);
 }
 
 bool BotFunctions::MessageUnderstanding(char*msg)

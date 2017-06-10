@@ -8,6 +8,6 @@ private:
  static char ** Self_Commands;
 public:
  BotFunctions(int socket);
- bool BotCommand(char*nick,char*realname,char*adress,char*TypeMessage,char*channel,char*command);
+bool BotCommand(const char*nick,const char*realname,const char*adress,const char*TypeMessage,const char*channel, const char*command);
  virtual void ReadMessage(char*msg);
 };
