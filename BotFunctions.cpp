@@ -40,8 +40,8 @@ if(!*nick || !*realname || !*adress || !*command || !*TypeMessage || !*channel) 
 size_t SizeString=_strlen(command);
 if(SizeString == 0) return false;
 
-bool CalledByUser=false;
-if(*channel!='#')CalledByUser=true;
+//bool CalledByUser=false;
+//if(*channel!='#')CalledByUser=true;
 long paramsComand = CountChar((char*)command,' ');
 if(paramsComand<=0)paramsComand=1;
 
