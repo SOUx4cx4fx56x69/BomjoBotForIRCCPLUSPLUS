@@ -165,7 +165,7 @@ if(RealNameWhere == -1) return false;
 unsigned int AdressWhere = FindWhere(msg,"@");
 if(AdressWhere == -1) return false;
 unsigned int ChannelWhere = FindWhere(msg,"#");
-bool TrueChannel = false;
+//bool TrueChannel = false;
 register volatile int tmp=0;
 char * Nick = (char*)malloc(sizeof(char) *  RealNameWhere);
 char * RealName = (char*)malloc(sizeof(char) *  sizeString-RealNameWhere);
@@ -186,7 +186,7 @@ char * channel;
   if(ChannelWhere == -1)
   {
    channel = strdup(Nick);
-   TrueChannel=true;
+ //  TrueChannel=true;
    while(*msg && *msg !=' ')*msg++;
   }
   else
@@ -211,7 +211,7 @@ if(FindWhere(TypeMessage,"PRIVMSG")!=-1)
 free(Nick);
 free(RealName);
 free(Adress);
-free(TypeMessage);
+//free(TypeMessage);
 //free(Message);
 //if(TrueChannel)
 // free(channel);
