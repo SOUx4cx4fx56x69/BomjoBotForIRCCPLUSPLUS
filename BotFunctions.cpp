@@ -212,12 +212,10 @@ if(FindWhere(TypeMessage,"PRIVMSG")!=-1)
 free(Nick);
 free(RealName);
 free(Adress);
-/*
 free(TypeMessage);
 free(Message);
 if(TrueChannel)
  free(channel);
-*/
 }
 
 void BotFunctions::ReadMessage(char*msg)
