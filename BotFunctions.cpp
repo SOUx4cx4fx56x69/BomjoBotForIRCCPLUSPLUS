@@ -25,7 +25,9 @@
   *msg++;\
 }
 #endif
-
+const char help[] = 
+"SAYTHIS (#channel optional) message;LEAVE #channel;JOINTO #channel;"
+"WRITETOSERVER message;NICKSET nick;QUIT message;";
 BotFunctions::BotFunctions(int socket)
 {
    BotFunctions::self_socket=socket;
@@ -60,19 +62,19 @@ if(strcmp(Arguments[0],"SAYTHIS") == 0)
 {
  if(Arguments[1][0] != '#')
  {
-  applog(DEBUG,"BotFunctions::BotCommand -> dont channel");
+ // applog(DEBUG,"BotFunctions::BotCommand -> dont channel");
   sprintf(tmp_bufffer,"PRIVMSG %s",channel);
   for(unsigned int i = 1;i<t;i++)
   {
    sprintf(tmp_bufffer,"%s %s",tmp_bufffer,Arguments[i]);
   }
   writeTo(this->self_socket,tmp_bufffer);
-  applog(DEBUG,"BotFunctions::BotCommand -> Write to %s",tmp_bufffer);
+ // applog(DEBUG,"BotFunctions::BotCommand -> Write to %s",tmp_bufffer);
  }
  else
  { 
   //shitcode one love
-  applog(DEBUG,"BotFunctions::BotCommand -> exist channel");
+ // applog(DEBUG,"BotFunctions::BotCommand -> exist channel");
   unsigned int tmp_counter_channel=0;
   char tmp_channel_name[CHANNELSIZE];
   while(Arguments[1][tmp_counter_channel])
@@ -82,7 +84,7 @@ if(strcmp(Arguments[0],"SAYTHIS") == 0)
   }
   tmp_channel_name[tmp_counter_channel]='\0';
   sprintf(tmp_bufffer,"PRIVMSG %s %s",tmp_channel_name,Arguments[2]);
-  applog(DEBUG,"BotFunctions::BotCommand -> Write to %s",tmp_bufffer);
+ // applog(DEBUG,"BotFunctions::BotCommand -> Write to %s",tmp_bufffer);
   writeTo(this->self_socket,tmp_bufffer);
  }
 }//if(strcmp(Arguments[0],"SAYTHIS") == 0)
@@ -98,7 +100,14 @@ else if(strcmp(Arguments[0],"JOINTO") == 0)
 }
 else if(strcmp(Arguments[0],"QUIT") == 0)
 {
-  sprintf(tmp_bufffer,"QUIT %s",Arguments[1]);
+  if(Arguments[1][0])
+  {
+  
+  sprintf(tmp_bufffer,"QUIT ");
+  for(unsigned int i = 1;i<t;i++)
+   sprintf(tmp_bufffer,"%s%s",tmp_bufffer,Arguments[i]);
+  
+  }
   writeTo(this->self_socket,tmp_bufffer);
   raise(9);
 }
@@ -115,6 +124,13 @@ else if(strcmp(Arguments[0],"NICKSET") == 0)
   sprintf(tmp_bufffer,"NICK %s",Arguments[1]);
   writeTo(this->self_socket,tmp_bufffer);
 }
+else if(strstr(Arguments[0],"HELP") != 0)
+{
+  sprintf(tmp_bufffer,"PRIVMSG %s %s",channel, help);
+  writeTo(this->self_socket,tmp_bufffer);
+  applog(DEBUG,"Write-> %s",tmp_bufffer);
+}
+bzero(tmp_bufffer,STACKTMPSIZE);
 
 for(unsigned int i = 0;i< paramsComand;i++)
  free(Arguments[i]);
